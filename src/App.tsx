@@ -1,26 +1,49 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import { Button, Form, Input, Select } from "antd"
+import "./App.css"
+import AppLayout from "./components/AppLayout"
+import moment from "moment"
+import dayjs from "dayjs"
+type RecorData = {
+  account: { name: string; gender: "male" | "female" | "other" }
+  sleepData: { sleepHours: number; date: string }
 }
 
-export default App;
+function App() {
+  const [form] = Form.useForm()
+  const formatInputDate = (value: string): string => {
+    // Format the input date string to YYYY-MM-DD using moment.js
+    return moment(value, "YYYY-MM-DD", true).format("YYYY-MM-DD")
+  }
+  const onFinish = (value: any) => {
+    console.log(value)
+  }
+  const handleDateChange = (
+    rule: any,
+    value: string,
+    callback: (error?: string) => void
+  ) => {
+    if (!value) {
+      callback("Please enter a date")
+      return
+    }
+
+    if (!moment(value, "YYYY-MM-DD", true).isValid()) {
+      callback("Please enter a valid date in YYYY-MM-DD format")
+      return
+    }
+
+    if (moment(value).isAfter(moment(), "day")) {
+      callback("Please enter a date not in the future")
+      return
+    }
+
+    callback()
+  }
+  return (
+    <>
+      <AppLayout />
+    </>
+  )
+}
+
+export default App
