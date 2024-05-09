@@ -29,13 +29,11 @@ const items: MenuItem[] = [
       </Link>
     ),
   },
-  // getItem("Option 1", "1", ),
-  // getItem("Option 2", "2", <DesktopOutlined />),
 ]
 
 const AppLayout: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false)
-  const [activeMenue, setActiveMenue] = useState(["1"])
+  const [activeMenue, setActiveMenue] = useState<string[]>([])
   const location = useLocation()
   const currentUrl = location.pathname
   useEffect(() => {
@@ -56,8 +54,9 @@ const AppLayout: React.FC = () => {
         onCollapse={(value) => setCollapsed(value)}
       >
         <Menu
+          selectedKeys={activeMenue}
           style={{ background: "#3b4799", marginTop: "4rem" }}
-          defaultSelectedKeys={activeMenue}
+          // defaultSelectedKeys={activeMenue}
           mode="inline"
           items={items}
         />

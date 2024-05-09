@@ -39,25 +39,6 @@ function Charts({ name, data }: any | undefined) {
   const [option, setOptions] = useState<ChartOptions | null>(null)
   useEffect(() => {
     if (data) {
-      const highestSleepHours = data.reduce(
-        (maxSleepHours: number, item: any) =>
-          Math.max(maxSleepHours, item.sleepHours),
-        0
-      )
-
-      // Generate the array with colors based on sleepHours
-      const coloredData = data.map((item: any) => {
-        if (item.sleepHours === highestSleepHours) {
-          return {
-            value: item.sleepHours,
-            itemStyle: {
-              color: "#a90000",
-            },
-          }
-        }
-        return item.sleepHours
-      })
-      console.log("asd", coloredData)
       setOptions({
         title: {
           text: name,
@@ -74,7 +55,7 @@ function Charts({ name, data }: any | undefined) {
         },
         series: [
           {
-            data: coloredData,
+            data: data.map((item: any) => item.sleepHours),
             type: "bar",
           },
         ],
