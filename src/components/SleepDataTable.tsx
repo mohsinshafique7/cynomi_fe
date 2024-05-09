@@ -1,28 +1,11 @@
 import React, { useState, useEffect } from "react"
-import { Space, Table } from "antd"
+import { Space, Spin, Table } from "antd"
 import type { TableProps } from "antd"
 import { useQuery } from "@tanstack/react-query"
-import { getAllAccounts, getLastSevenDaysData } from "../Request"
 import Charts from "./Charts"
-interface RowType {
-  key: string
-  name: string
-  gender: "male" | "female" | "other"
-  noOfEntries: number
-  sleepRecord: {
-    sleepHours: number
-    date: Date
-  }[]
-  sleepData: {
-    key: string
-    sleepHours: number
-    date: string
-  }[]
-}
-interface ResponseType {
-  count: number
-  rows: RowType[]
-}
+import ErrorComponent from "./ErrorComponent"
+import { useGetAllAccounts, useGetLastSevenDaysData } from "../utils/Request"
+import { RowType, Pagination, ResponseType } from "../types"
 
 const columns: TableProps<RowType>["columns"] = [
   {
@@ -42,74 +25,87 @@ const columns: TableProps<RowType>["columns"] = [
     key: "noOfEntries",
   },
 ]
-
+/**
+ * We are retrieving all the accounts detail by using @Hook useGetAllAccounts
+ * On Selection of row we are setting account Id to  @state selectedRowKeys
+ * @state selectedRowKeys is dependency on @Hook useGetLastSevenDaysData (if length>0)
+ * @state selectedRowKeys is a dependency on @useEffect Hook which is setting data from  @Hook useGetLastSevenDaysData to @state setLastSevenDaysRecord
+ * And when data is completely loaded @component <Charts/> will appear
+ * Again on de-selecting row is setting @state selectedRowKeys to [] and @state setLastSevenDaysRecord to null
+ *
+ */
 const SleepDataTable: React.FC = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([])
 
-  const [page, setPage] = useState<{
-    perPage: number
-    currentPage: number
-  }>({
-    perPage: 3,
+  const [page, setPage] = useState<Pagination>({
+    perPage: 10,
     currentPage: 1,
   })
   const {
     data: accountData,
     isLoading: accountIdLoading,
     isError: accountIsError,
-  } = useQuery<ResponseType>({
-    queryKey: ["historyQuery", page.perPage, page.currentPage],
-    queryFn: async () => {
-      const response = await getAllAccounts(page)
-      let formattedRows: any = response.data.rows.map((item: any) => ({
-        key: item.id,
-        name: item.name,
-        gender: item.gender,
-        noOfEntries: item.noOfEntries,
-      }))
-      return { rows: formattedRows, count: response.data.count }
-    },
-  })
+  } = useGetAllAccounts(page)
   const {
     data: chartData,
     isLoading: chartIsLoading,
     isError: chartIsError,
-  } = useQuery<ResponseType>({
-    queryKey: [`chartsQuery-${selectedRowKeys[0]}`],
-    enabled: selectedRowKeys.length > 0,
-    queryFn: async () => {
-      const response = await getLastSevenDaysData(selectedRowKeys[0])
-      let formattedRows: any = response.data.rows.map((item: any) => ({
-        date: item.date,
-        sleepHours: item.sleepHours,
-      }))
-      return formattedRows
-    },
-  })
+  } = useGetLastSevenDaysData(selectedRowKeys)
+  const [lastSevenDaysRecord, setLastSevenDaysRecord] = useState<
+    ResponseType | undefined
+  >()
 
+  useEffect(() => {
+    if (
+      // When request is completed successfully we set the last seven days data
+      chartIsLoading === false &&
+      chartData !== undefined &&
+      selectedRowKeys.length > 0
+    ) {
+      setLastSevenDaysRecord(chartData)
+    }
+  }, [selectedRowKeys, chartData, chartIsLoading])
+
+  /**
+   * @param record Of Selected Row based on this we trigger
+   *  the get request of last seven days
+   */
   function handleRowClick(record: RowType) {
     if (selectedRowKeys.includes(record.key)) {
       setSelectedRowKeys([])
+      setLastSevenDaysRecord(undefined)
     } else {
       setSelectedRowKeys([record.key])
     }
   }
+  /**
+   *
+   * @param record Record of Table row
+   * set class of selected row based on selectedRowKeys State
+   */
   const rowClassName = (record: RowType) => {
     return selectedRowKeys.includes(record.key)
       ? "selected-row table-row"
       : "table-row"
   }
   if (!accountIdLoading && accountIsError) {
-    return <h1>Error Occured....</h1>
+    return <ErrorComponent />
   }
   if (accountIdLoading) {
-    return <h1 data-testid="loading-text">Loading....</h1>
+    return (
+      <div>
+        <Spin fullscreen size="large" />
+      </div>
+    )
   }
   return (
     <>
+      <div className="table-page">
+        <h1 className="table-page-heading">History Table</h1>
+      </div>
+
       {accountData && (
         <>
-          {JSON.stringify(selectedRowKeys)}
           <Table
             dataSource={accountData.rows}
             columns={columns}
@@ -130,7 +126,17 @@ const SleepDataTable: React.FC = () => {
           />
           {selectedRowKeys.length > 0 &&
             chartIsLoading === false &&
-            chartIsError === false && <Charts data={chartData} />}
+            chartIsError === false &&
+            lastSevenDaysRecord && (
+              <Charts
+                name={
+                  accountData.rows.find(
+                    (row: any) => row.key === selectedRowKeys[0]
+                  )?.name
+                }
+                data={lastSevenDaysRecord}
+              />
+            )}
         </>
       )}
     </>

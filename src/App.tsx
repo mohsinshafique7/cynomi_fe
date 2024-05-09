@@ -3,6 +3,7 @@ import "./App.css"
 import AppLayout from "./components/AppLayout"
 import moment from "moment"
 import dayjs from "dayjs"
+import ErrorBoundary from "./components/ErrorBoundry"
 type RecorData = {
   account: { name: string; gender: "male" | "female" | "other" }
   sleepData: { sleepHours: number; date: string }
@@ -41,7 +42,9 @@ function App() {
   }
   return (
     <>
-      <AppLayout />
+      <ErrorBoundary>
+        <AppLayout />
+      </ErrorBoundary>
     </>
   )
 }

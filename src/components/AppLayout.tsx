@@ -1,7 +1,7 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { FormOutlined, DatabaseOutlined } from "@ant-design/icons"
 import type { MenuProps } from "antd"
-import { Route, Routes, Link } from "react-router-dom"
+import { Route, Routes, Link, useLocation } from "react-router-dom"
 import { Layout, Menu } from "antd"
 import FormPage from "../Pages/FormPage"
 import SleepRecordPage from "../Pages/SleepRecordPage"
@@ -35,6 +35,17 @@ const items: MenuItem[] = [
 
 const AppLayout: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false)
+  const [activeMenue, setActiveMenue] = useState(["1"])
+  const location = useLocation()
+  const currentUrl = location.pathname
+  useEffect(() => {
+    console.log("triggered", currentUrl)
+    if (currentUrl === "/history") {
+      setActiveMenue(["2"])
+    } else {
+      setActiveMenue(["1"])
+    }
+  }, [location, currentUrl])
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
@@ -46,7 +57,7 @@ const AppLayout: React.FC = () => {
       >
         <Menu
           style={{ background: "#3b4799", marginTop: "4rem" }}
-          defaultSelectedKeys={["1"]}
+          defaultSelectedKeys={activeMenue}
           mode="inline"
           items={items}
         />
@@ -65,9 +76,9 @@ const AppLayout: React.FC = () => {
         <Content style={{ margin: "0 5px" }}>
           <div
             style={{
-              padding: 24,
+              padding: "5px",
               minHeight: 360,
-              background: "#fff",
+
               // borderRadius: borderRadiusLG,
             }}
           >

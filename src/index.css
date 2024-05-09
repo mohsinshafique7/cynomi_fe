@@ -13,20 +13,6 @@ body {
   background-color: #f0f2f5;
 }
 
-/* .container {
-  margin: 20px;
-} */
-/* Table */
-/* .ant-form-item-row {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  width: 100%;
-} */
-/* .ant-form-item-control {
-  width: 100%;
-  margin-bottom: 20px !important;
-} */
 .ant-table-thead > tr > th {
   background-color: #f0f2f5;
 }
@@ -42,24 +28,78 @@ body {
   padding: 12px 16px;
 }
 
-/* forms.css */
-
-/* Form Container */
-.form-container {
-}
 h1 {
   margin: 0;
 }
 .ant-layout-sider-trigger {
   background: #3b4799;
 }
-
-.form-container {
-  /* margin-top: 10px;
-  max-width: 800px; */
-  /* margin: 0 auto; */
-  /* padding: 20px; */
+.ant-input {
+  width: 100%;
+  border-color: #3b4799;
+  max-width: 600px;
+  min-width: 400px;
 }
+.ant-select {
+  max-width: 600px;
+  min-width: 400px;
+}
+.ant-select-selector {
+  border-color: #3b4799 !important;
+}
+.ant-btn {
+  background: #3b4799 !important;
+}
+
 .ant-btn-primary {
   float: right;
+}
+.error-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Adjust height as needed */
+  background-color: #f8d7da; /* You can change the background color */
+}
+
+.error-container h1 {
+  color: #721c24; /* You can change the text color */
+  font-size: 24px; /* You can adjust font size */
+}
+
+.error-container button {
+  margin-top: 20px; /* Adjust spacing from the error message */
+  padding: 10px 20px; /* Adjust button padding */
+  font-size: 16px; /* Adjust button font size */
+  background-color: #dc3545; /* You can change the button background color */
+  color: white; /* You can change the button text color */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.error-container button:hover {
+  background-color: #c82333; /* You can change the button background color on hover */
+}
+/* TablePage.css */
+.table-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 20px;
+  padding-top: 20px;
+}
+
+.table-page-heading {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 20px;
+}
+.no-record-message {
+  font-size: 18px;
+  color: #555;
+  text-align: center;
+  margin-top: 20px;
 }

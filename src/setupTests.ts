@@ -4,9 +4,6 @@
 // learn more: https://github.com/testing-library/jest-dom
 
 import "@testing-library/jest-dom"
-import { TextDecoder, TextEncoder } from "util"
-global.TextEncoder = TextEncoder
-global.TextDecoder = TextDecoder
 // // Provide the server-side API with the request handlers.
 
 // // const server = setupServer(...handlers)

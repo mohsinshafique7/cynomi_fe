@@ -1,6 +1,7 @@
 // src/App.js
 import { useState, useEffect } from "react"
 import ReactEcharts from "echarts-for-react"
+import { Table } from "antd"
 interface ChartOptions {
   title: {
     text: string
@@ -11,7 +12,6 @@ interface ChartOptions {
     axisPointer: {
       type: string
     }
-    // formatter: (params: any) => string
   }
   xAxis: {
     type: string
@@ -26,21 +26,45 @@ interface ChartOptions {
   }[]
 }
 
-function Charts({ data }: any | undefined) {
+function Charts({ name, data }: any | undefined) {
+  const tooltip = {
+    trigger: "axis",
+    axisPointer: {
+      type: "shadow",
+    },
+    formatter: (params: any) => {
+      return params[0].value + " Hours"
+    },
+  }
   const [option, setOptions] = useState<ChartOptions | null>(null)
   useEffect(() => {
     if (data) {
+      const highestSleepHours = data.reduce(
+        (maxSleepHours: number, item: any) =>
+          Math.max(maxSleepHours, item.sleepHours),
+        0
+      )
+
+      // Generate the array with colors based on sleepHours
+      const coloredData = data.map((item: any) => {
+        if (item.sleepHours === highestSleepHours) {
+          return {
+            value: item.sleepHours,
+            itemStyle: {
+              color: "#a90000",
+            },
+          }
+        }
+        return item.sleepHours
+      })
+      console.log("asd", coloredData)
       setOptions({
         title: {
-          text: data?.title,
-          subtext: "Gender: " + data.subText,
+          text: name,
+          subtext:
+            "This chart shows aggregated sleep hours Of Last Seven Days.",
         },
-        tooltip: {
-          trigger: "axis",
-          axisPointer: {
-            type: "shadow",
-          },
-        },
+        tooltip: tooltip,
         xAxis: {
           type: "category",
           data: data.map((item: any) => item.date),
@@ -50,7 +74,7 @@ function Charts({ data }: any | undefined) {
         },
         series: [
           {
-            data: data.map((item: any) => item.sleepHours),
+            data: coloredData,
             type: "bar",
           },
         ],
@@ -58,15 +82,20 @@ function Charts({ data }: any | undefined) {
     }
   }, [data])
   if (data.length === 0) {
-    return <>No Record For last Seven Days</>
+    return (
+      <div className="no-record-message">
+        No Record Found For last Seven Days
+      </div>
+    )
   }
-
-  return (
-    <>
-      {JSON.stringify(data)}
-      <ReactEcharts option={option} />
-    </>
-  )
+  if (option) {
+    return (
+      <div style={{ height: "500px", width: "100%", padding: "20px" }}>
+        <ReactEcharts style={{ height: "100%" }} option={option} />
+      </div>
+    )
+  }
+  return <></>
   // return <>{JSON.stringify(data)}</>
 }
 export default Charts
