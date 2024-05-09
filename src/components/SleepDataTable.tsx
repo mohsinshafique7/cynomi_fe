@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react"
-import { Space, Spin, Table } from "antd"
+import { Spin, Table } from "antd"
 import type { TableProps } from "antd"
-import { useQuery } from "@tanstack/react-query"
 import Charts from "./Charts"
 import ErrorComponent from "./ErrorComponent"
-import { useGetAllAccounts, useGetLastSevenDaysData } from "../utils/Request"
+import { useGetAllAccounts, useGetLastSevenDaysData } from "../Hooks/Request"
 import { RowType, Pagination, ResponseType } from "../types"
 
 const columns: TableProps<RowType>["columns"] = [

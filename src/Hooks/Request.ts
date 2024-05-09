@@ -1,7 +1,8 @@
-import { MutationFunction, useMutation, useQuery } from "@tanstack/react-query"
-import axios, { AxiosError, isAxiosError } from "axios"
+import { useMutation, useQuery } from "@tanstack/react-query"
+import { AxiosError, isAxiosError } from "axios"
 import { PostData, ResponseType } from "../types"
 import { FormInstance } from "antd"
+import AxiosInstance from "../axiosConfig"
 import { NotificationInstance } from "antd/es/notification/interface"
 export const usePostAccountData = (
   form: FormInstance,
@@ -10,15 +11,7 @@ export const usePostAccountData = (
   return useMutation<PostData, AxiosError<any, any>, any, any>({
     mutationFn: async (data) => {
       try {
-        const response = await axios.post(
-          "http://localhost:5000/api/accounts",
-          data,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        )
+        const response = await AxiosInstance.post(`/accounts`, data)
         return response.data
       } catch (error: any) {
         throw new Error("Failed to execute mutation: " + error.message)
@@ -46,22 +39,12 @@ export const usePostAccountData = (
   })
 }
 
-// Type guard to check if the error object is an AxiosError
-// const isAxiosError = (error: any): error is AxiosError => {
-//   return error.isAxiosError !== undefined
-// }
-
 export const useGetAllAccounts = ({ perPage, currentPage }: any) => {
   return useQuery<ResponseType>({
     queryKey: ["historyQuery", perPage, currentPage],
     queryFn: async () => {
-      const response = await axios.get(
-        `http://localhost:5000/api/accounts?perPage=${perPage}&currentPage=${currentPage}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
+      const response = await AxiosInstance.get(
+        `/accounts?perPage=${perPage}&currentPage=${currentPage}`
       )
       let formattedRows: any = response.data.rows.map((item: any) => ({
         key: item.id,
@@ -78,13 +61,8 @@ export const useGetLastSevenDaysData = (selectedRowKeys: string[]) => {
     queryKey: [`chartsQuery-${selectedRowKeys[0]}`],
     enabled: selectedRowKeys.length > 0,
     queryFn: async () => {
-      const response = await axios.get(
-        `http://localhost:5000/api/sleep-records/last-seven/+${selectedRowKeys[0]}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
+      const response = await AxiosInstance.get(
+        `/sleep-records/last-seven/+${selectedRowKeys[0]}`
       )
       let formattedRows: any = response.data.rows.map((item: any) => ({
         date: item.date,
