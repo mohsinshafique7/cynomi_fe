@@ -39,6 +39,20 @@ function Charts({ name, data }: any | undefined) {
   const [option, setOptions] = useState<ChartOptions | null>(null)
   useEffect(() => {
     if (data) {
+      let seriesValues = data.map((item: any) => item.sleepHours)
+      const maxValue = Math.max(...seriesValues)
+      const formatedValue = data.map((item: any) => {
+        if (item.sleepHours === maxValue) {
+          return {
+            value: item.sleepHours,
+            itemStyle: {
+              color: "#a90000",
+            },
+          }
+        }
+        return item.sleepHours
+      })
+
       setOptions({
         title: {
           text: name,
@@ -55,14 +69,14 @@ function Charts({ name, data }: any | undefined) {
         },
         series: [
           {
-            data: data.map((item: any) => item.sleepHours),
+            data: formatedValue,
             type: "bar",
           },
         ],
       })
     }
   }, [data])
-  if (data.length === 0) {
+  if (!data) {
     return (
       <div className="no-record-message">
         No Record Found For last Seven Days
@@ -77,6 +91,5 @@ function Charts({ name, data }: any | undefined) {
     )
   }
   return <></>
-  // return <>{JSON.stringify(data)}</>
 }
 export default Charts

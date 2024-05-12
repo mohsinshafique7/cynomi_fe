@@ -38,17 +38,20 @@ h1 {
   width: 100%;
   border-color: #3b4799;
   max-width: 600px;
-  min-width: 400px;
+  min-width: 300px;
 }
 .ant-select {
   max-width: 600px;
-  min-width: 400px;
+  min-width: 300px;
+}
+.ant-btn {
+  background: #3b4799 !important;
 }
 .ant-select-selector {
   border-color: #3b4799 !important;
 }
-.ant-btn {
-  background: #3b4799 !important;
+.ant-select-status-error .ant-select-selector {
+  border-color: #dc3545 !important;
 }
 
 .ant-btn-primary {
@@ -91,7 +94,13 @@ h1 {
   padding-bottom: 20px;
   padding-top: 20px;
 }
-
+.form-horizontal {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 .table-page-heading {
   font-size: 24px;
   color: #333;

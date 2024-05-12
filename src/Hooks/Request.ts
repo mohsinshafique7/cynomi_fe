@@ -64,10 +64,16 @@ export const useGetLastSevenDaysData = (selectedRowKeys: string[]) => {
       const response = await AxiosInstance.get(
         `/sleep-records/last-seven/+${selectedRowKeys[0]}`
       )
-      let formattedRows: any = response.data.rows.map((item: any) => ({
-        date: item.date,
-        sleepHours: item.sleepHours,
-      }))
+      let formattedRows: any = response.data.rows
+        .map((item: any) => ({
+          date: item.date,
+          sleepHours: item.sleepHours,
+        }))
+        .sort((a: any, b: any) => {
+          const dateA = new Date(a.date)
+          const dateB = new Date(b.date)
+          return dateA.getTime() - dateB.getTime()
+        })
       return formattedRows
     },
   })

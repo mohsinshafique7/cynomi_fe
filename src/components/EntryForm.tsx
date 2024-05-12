@@ -8,22 +8,6 @@ const EntryForm: React.FC = () => {
   const [form] = Form.useForm()
   const [api, contextHolder] = useNotification()
   const { mutateAsync } = usePostAccountData(form, api)
-  async function onFinish(values: any) {
-    const { name, date, gender, sleepHours } = values
-    const res: PostData = {
-      name,
-      gender,
-      sleepRecord: {
-        sleepHours,
-        date,
-      },
-    }
-    try {
-      await mutateAsync(res)
-    } catch {
-      console.log("Error")
-    }
-  }
 
   const handleDateChange = (rule: any, value: string) => {
     if (!value) {
@@ -65,72 +49,87 @@ const EntryForm: React.FC = () => {
       {contextHolder}
       <div className="table-page">
         <h1 className="table-page-heading">Daily Hourly Sleep Entry Form</h1>
-
-        <Form
-          name={"record-entry-form"}
-          {...formItemLayout}
-          layout={"vertical"}
-          requiredMark={false}
-          form={form}
-          style={{ margin: "auto" }}
-        >
-          <Form.Item
-            label="Name"
-            name="name"
-            rules={[
-              { required: true, message: "Please enter your full name!" },
-            ]}
-          >
-            <Input placeholder="Full Name" />
-          </Form.Item>
-          <Form.Item
-            label="Gender"
-            name="gender"
-            rules={[{ required: true, message: "Please select gender!" }]}
-          >
-            <Select>
-              <Select.Option value="male">Male</Select.Option>
-              <Select.Option value="female">Female</Select.Option>
-              <Select.Option value="other">other</Select.Option>
-            </Select>
-          </Form.Item>
-
-          <Form.Item
-            label="Date"
-            name="date"
-            rules={[{ validator: handleDateChange }]}
-          >
-            <Input
-              placeholder="Enter date (YYYY-MM-DD)"
-              onBlur={(e) => (e.target.value = formatInputDate(e.target.value))}
-            />
-          </Form.Item>
-          <Form.Item
-            label="Sleep Hours"
-            name="sleepHours"
-            rules={[{ validator: handleSleepHourChange }]}
-          >
-            <Input placeholder="Sleep Hour(s)" type="number" />
-          </Form.Item>
-          <Form.Item>
-            <Button
-              className="form-submit"
-              type="primary"
-              htmlType="submit"
-              onClick={async () => {
-                try {
-                  const val = await form.validateFields()
-                  onFinish(val)
-                } catch (err) {}
-              }}
-            >
-              Submit
-            </Button>
-          </Form.Item>
-        </Form>
       </div>
+      <Form
+        className="form-horizontal"
+        name={"record-entry-form"}
+        {...formItemLayout}
+        onFinish={async (values: any) => {
+          const { name, date, gender, sleepHours } = values
+          const res: PostData = {
+            name,
+            gender,
+            sleepRecord: {
+              sleepHours,
+              date,
+            },
+          }
+          try {
+            await mutateAsync(res)
+          } catch {
+            console.log("Error")
+          }
+        }}
+        layout={"vertical"}
+        requiredMark={false}
+        form={form}
+        style={{ margin: "auto" }}
+      >
+        <Form.Item
+          label="Name"
+          name="name"
+          rules={[{ required: true, message: "Please enter your full name!" }]}
+        >
+          <Input placeholder="Full Name" />
+        </Form.Item>
+        <Form.Item
+          label="Gender"
+          name="gender"
+          rules={[{ required: true, message: "Please select gender!" }]}
+        >
+          <Select>
+            <Select.Option value="male">Male</Select.Option>
+            <Select.Option value="female">Female</Select.Option>
+            <Select.Option value="other">other</Select.Option>
+          </Select>
+        </Form.Item>
+        <Form.Item
+          label="Date"
+          name="date"
+          rules={[{ validator: handleDateChange }]}
+        >
+          <Input
+            placeholder="Enter date (YYYY-MM-DD)"
+            onBlur={(e) => (e.target.value = formatInputDate(e.target.value))}
+          />
+        </Form.Item>
+        <Form.Item
+          label="Sleep Hours"
+          name="sleepHours"
+          rules={[{ validator: handleSleepHourChange }]}
+        >
+          <Input placeholder="Sleep Hour(s)" type="number" />
+        </Form.Item>
+        <Form.Item>
+          <Button className="form-submit" type="primary" htmlType="submit">
+            Submit
+          </Button>
+        </Form.Item>
+      </Form>
     </div>
   )
 }
 
 export default EntryForm
+
+// <Form.Item
+// label="Gender"
+// name="gender"
+// rules={[{ required: true, message: "Please select gender!" }]}
+// >
+// <Select>
+//   <Select.Option value="male">Male</Select.Option>
+//   <Select.Option value="female">Female</Select.Option>
+//   <Select.Option value="other">other</Select.Option>
+// </Select>
+// </Form.Item>

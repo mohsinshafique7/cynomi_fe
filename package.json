@@ -21,6 +21,7 @@
     "echarts-for-react": "^3.0.2",
     "framer-motion": "^11.1.7",
     "moment": "^2.30.1",
+    "nock": "^13.5.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.23.0",
@@ -30,13 +31,13 @@
     "web-vitals": "^2.1.4"
   },
   "devDependencies": {
-    "@tanstack/eslint-plugin-query": "^5.28.11",
-    "msw": "^2.2.14"
+    "@tanstack/eslint-plugin-query": "^5.28.11"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "test:cov": "react-scripts test --coverage",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

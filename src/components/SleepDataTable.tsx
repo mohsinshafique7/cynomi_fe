@@ -93,7 +93,7 @@ const SleepDataTable: React.FC = () => {
   if (accountIdLoading) {
     return (
       <div>
-        <Spin fullscreen size="large" />
+        <Spin data-testid="loading" fullscreen size="large" />
       </div>
     )
   }

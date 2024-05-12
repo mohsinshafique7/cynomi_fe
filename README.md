@@ -24,7 +24,7 @@ This project is a frontend application built using React with TypeScript, React 
    ```
 3. Install dependencies:
    ```
-   npm install
+   yarn or npm install
    ```
 
 ## Usage:
@@ -39,16 +39,50 @@ This project is a frontend application built using React with TypeScript, React 
 
 - Configure Axios base URL and other options in the Axios configuration file (`axiosConfig.js` or similar).
 
+## Test Coverage
+
+Test coverage report can be found in `coverage/icov-report/index.html`.
+
+### Tests Detail:
+
+#### Entry Form:
+
+- All text and labels should be displayed.
+- If not filled errors should be displayed.
+- Test Date Formate validations
+- Test Date future date validation
+- Sleep time must be between 1 and 24
+
+#### History Table:
+
+- Loading component should be displayed.
+- Renders error component when account data fetch fails.
+- Renders account data but not charts on successful data fetch
+- On Click Show Charts Component
+
+#### Charts:
+
+- Renders no record message when no data is provided.
+- Renders chart when data is provided.
+
+#### Get Hooks:
+
+- useGetAllAccounts fetches data correctly
+- useGetLastSevenDaysData fetches data correctly.
+
 ## Folder Structure:
 
 ```
 src/
+|-- __tests__/          # Unit tests for the components and hooks
 |-- components/         # React components
-|-- Pages/             # CSS or styling files
-|-- Hooks/           # Custom hooks for React Query or other functionality
+|-- Hooks/              # Custom hooks for React Query or other functionality
+|-- Pages/              # Pages rendered by router
+|-- tests.utils/        # Utility function of testing
 |-- App.tsx             # Main application component
 |-- index.tsx           # Entry point of the application
 |-- axiosConfig.js      # Axios configuration (optional)
+|-- .nvmrc              # node version
 ```
 
 ## Future Thought:
